@@ -12,7 +12,9 @@ Page({
     cityPickerVisible: false,
     jobPickerVisible: false,
     cityColumns: [],
-    jobColumns: []
+    jobColumns: [],
+    selectedCityIndex: 0,
+    selectedJobIndex: 0
   },
 
   onLoad() {
@@ -31,13 +33,32 @@ Page({
     const userInfo = app.globalData.userInfo
     
     if (userInfo) {
+      let selectedCityIndex = 0
+      let selectedJobIndex = 0
+      
+      if (userInfo.expectedCityCode) {
+        const cityIndex = cities.findIndex(c => c.code === userInfo.expectedCityCode)
+        if (cityIndex >= 0) {
+          selectedCityIndex = cityIndex
+        }
+      }
+      
+      if (userInfo.expectedJobId) {
+        const jobIndex = jobTypes.findIndex(j => j.id === userInfo.expectedJobId)
+        if (jobIndex > 0) {
+          selectedJobIndex = jobIndex - 1
+        }
+      }
+      
       this.setData({
         userInfo,
         nickname: userInfo.nickname || '',
         expectedCity: userInfo.expectedCity || '',
         expectedCityCode: userInfo.expectedCityCode || '',
         expectedJob: userInfo.expectedJob || '',
-        expectedJobId: userInfo.expectedJobId || ''
+        expectedJobId: userInfo.expectedJobId || '',
+        selectedCityIndex,
+        selectedJobIndex
       })
     }
   },
@@ -55,12 +76,15 @@ Page({
   },
 
   onCityChange(e) {
-    const { value, index } = e.detail
-    const city = cities[index]
-    this.setData({
-      expectedCity: city.name,
-      expectedCityCode: city.code
-    })
+    const value = e.detail.value
+    const index = value[0]
+    if (index >= 0 && index < cities.length) {
+      const city = cities[index]
+      this.setData({
+        expectedCity: city.name,
+        expectedCityCode: city.code
+      })
+    }
   },
 
   clearCity() {
@@ -80,12 +104,16 @@ Page({
   },
 
   onJobChange(e) {
-    const { value, index } = e.detail
-    const job = jobTypes[index + 1]
-    this.setData({
-      expectedJob: job.name,
-      expectedJobId: job.id
-    })
+    const value = e.detail.value
+    const index = value[0]
+    const jobIndex = index + 1
+    if (jobIndex >= 0 && jobIndex < jobTypes.length) {
+      const job = jobTypes[jobIndex]
+      this.setData({
+        expectedJob: job.name,
+        expectedJobId: job.id
+      })
+    }
   },
 
   clearJob() {
