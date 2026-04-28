@@ -1,0 +1,96 @@
+<view class="my-container">
+  <view class="user-section">
+    <view wx:if="{{isLoggedIn}}" class="user-info" bindtap="goToMyInfo">
+      <view class="user-avatar">
+        <text class="avatar-text" wx:if="{{userInfo.nickname}}">{{userInfo.nickname[0]}}</text>
+        <text class="avatar-text" wx:else>用</text>
+      </view>
+      <view class="user-detail">
+        <text class="user-name">{{userInfo.nickname || '未设置昵称'}}</text>
+        <text class="user-phone">{{userInfo.phone}}</text>
+        <view class="user-tags" wx:if="{{userInfo.expectedCity || userInfo.expectedJob}}">
+          <text class="tag" wx:if="{{userInfo.expectedCity}}">{{userInfo.expectedCity}}</text>
+          <text class="tag" wx:if="{{userInfo.expectedJob}}">{{userInfo.expectedJob}}</text>
+        </view>
+      </view>
+      <text class="arrow-icon">›</text>
+    </view>
+    
+    <view wx:else class="login-prompt" bindtap="goToLogin">
+      <view class="login-avatar">
+        <text class="login-icon">👤</text>
+      </view>
+      <view class="login-text">
+        <text class="login-title">登录/注册</text>
+        <text class="login-desc">登录后可使用更多功能</text>
+      </view>
+      <text class="arrow-icon">›</text>
+    </view>
+  </view>
+
+  <view class="stats-section">
+    <view class="stats-item" bindtap="goToFavorites">
+      <text class="stats-value">{{favoriteCount}}</text>
+      <text class="stats-label">我的收藏</text>
+    </view>
+    <view class="stats-divider"></view>
+    <view class="stats-item">
+      <text class="stats-value">0</text>
+      <text class="stats-label">浏览记录</text>
+    </view>
+    <view class="stats-divider"></view>
+    <view class="stats-item">
+      <text class="stats-value">0</text>
+      <text class="stats-label">已投递</text>
+    </view>
+  </view>
+
+  <view class="menu-section">
+    <view class="menu-group">
+      <view class="menu-item" bindtap="goToMyInfo">
+        <view class="menu-icon">📝</view>
+        <text class="menu-text">完善信息</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="goToFavorites">
+        <view class="menu-icon">❤️</view>
+        <text class="menu-text">我的收藏</text>
+        <view class="menu-badge" wx:if="{{favoriteCount > 0}}">
+          <text class="badge-text">{{favoriteCount}}</text>
+        </view>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="menu-group">
+      <view class="menu-item" bindtap="goToHelpFeedback">
+        <view class="menu-icon">💡</view>
+        <text class="menu-text">帮助与反馈</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="makePhoneCall">
+        <view class="menu-icon">📞</view>
+        <text class="menu-text">联系客服</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="menu-group">
+      <view class="menu-item" bindtap="goToAbout">
+        <view class="menu-icon">ℹ️</view>
+        <text class="menu-text">关于我们</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{isLoggedIn}}" class="logout-section">
+    <view class="logout-btn" bindtap="doLogout">
+      <text class="logout-text">退出登录</text>
+    </view>
+  </view>
+
+  <view class="version-section">
+    <text class="version-text">版本 1.0.0</text>
+  </view>
+</view>

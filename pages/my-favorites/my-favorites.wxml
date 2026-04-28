@@ -1,0 +1,62 @@
+<view class="favorites-container">
+  <view wx:if="{{favorites.length > 0}}" class="job-list">
+    <view 
+      wx:for="{{favorites}}" 
+      wx:key="id" 
+      class="job-card" 
+      bindtap="goToJobDetail" 
+      data-id="{{item.id}}"
+    >
+      <view class="job-header">
+        <view class="job-title-row">
+          <text class="job-title">{{item.title}}</text>
+          <view class="job-tags">
+            <text wx:if="{{item.isHot}}" class="tag hot">热门</text>
+            <text wx:if="{{item.isUrgent}}" class="tag urgent">急招</text>
+          </view>
+        </view>
+        <text class="job-salary">{{item.salary}}</text>
+      </view>
+      
+      <view class="job-info">
+        <view class="info-item">
+          <text class="info-label">公司：</text>
+          <text class="info-value ellipsis">{{item.company}}</text>
+        </view>
+        <view class="info-row">
+          <view class="info-item">
+            <text class="info-label">地区：</text>
+            <text class="info-value">{{item.city}}</text>
+          </view>
+          <view class="info-item" wx:if="{{item.distance}}">
+            <text class="info-value text-primary">距您{{item.distance}}</text>
+          </view>
+        </view>
+      </view>
+      
+      <view class="job-footer">
+        <view class="time-info">
+          <text class="time-text">{{item.timeAgo}}</text>
+        </view>
+        <view class="favorite-btn" catchtap="toggleFavorite" data-id="{{item.id}}" data-index="{{index}}">
+          <text class="favorite-icon active">❤️</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{favorites.length === 0 && !loading}}" class="empty-state">
+    <view class="empty-icon-box">
+      <text class="empty-icon">💝</text>
+    </view>
+    <text class="empty-title">暂无收藏</text>
+    <text class="empty-tip">快去收藏心仪的职位吧</text>
+    <view class="empty-btn" bindtap="goToIndex">
+      <text class="empty-btn-text">去看看</text>
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading-state">
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

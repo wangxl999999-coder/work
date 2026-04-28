@@ -1,0 +1,93 @@
+<scroll-view class="help-container" scroll-y>
+  <view class="help-section">
+    <view class="section-header">
+      <text class="section-title">常见问题</text>
+    </view>
+    
+    <view class="help-list">
+      <view 
+        wx:for="{{helpItems}}" 
+        wx:key="id" 
+        class="help-item"
+      >
+        <view class="help-question" bindtap="toggleExpand" data-index="{{index}}">
+          <text class="question-text">{{item.question}}</text>
+          <view class="question-arrow {{expandedIndex === index ? 'expanded' : ''}}">
+            <text>▼</text>
+          </view>
+        </view>
+        <view wx:if="{{expandedIndex === index}}" class="help-answer">
+          <text class="answer-text">{{item.answer}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="contact-section">
+    <view class="section-header">
+      <text class="section-title">联系我们</text>
+    </view>
+    
+    <view class="contact-card" bindtap="makePhoneCall">
+      <view class="contact-icon-box">
+        <text class="contact-icon">📞</text>
+      </view>
+      <view class="contact-info">
+        <text class="contact-title">客服电话</text>
+        <text class="contact-value">400-123-4567</text>
+      </view>
+      <text class="contact-arrow">›</text>
+    </view>
+    
+    <view class="contact-card">
+      <view class="contact-icon-box">
+        <text class="contact-icon">🕐</text>
+      </view>
+      <view class="contact-info">
+        <text class="contact-title">服务时间</text>
+        <text class="contact-value">周一至周日 9:00-18:00</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="feedback-section">
+    <view class="section-header">
+      <text class="section-title">意见反馈</text>
+      <text class="section-tip">您的建议对我们很重要</text>
+    </view>
+    
+    <view class="feedback-form">
+      <view class="form-item">
+        <text class="form-label">反馈内容</text>
+        <textarea 
+          class="form-textarea" 
+          placeholder="请详细描述您遇到的问题或建议..." 
+          value="{{feedbackContent}}"
+          bindinput="onContentInput"
+          maxlength="500"
+          show-confirm-bar="{{false}}"
+        />
+        <view class="word-count">
+          <text class="count-text">{{feedbackContent.length}}/500</text>
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">联系方式（选填）</text>
+        <input 
+          class="form-input" 
+          type="text" 
+          placeholder="手机号/邮箱，方便我们联系您" 
+          value="{{feedbackContact}}"
+          bindinput="onContactInput"
+        />
+      </view>
+      
+      <view class="submit-btn {{submitting ? 'disabled' : ''}}" bindtap="submitFeedback">
+        <text class="submit-text">{{submitting ? '提交中...' : '提交反馈'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="bottom-spacer"></view>
+</scroll-view>

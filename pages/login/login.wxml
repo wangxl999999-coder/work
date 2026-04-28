@@ -1,0 +1,60 @@
+<view class="login-container">
+  <view class="login-header">
+    <view class="logo">
+      <text class="logo-text">找工作</text>
+    </view>
+    <text class="welcome-text">欢迎回来</text>
+    <text class="sub-text">登录您的账号</text>
+  </view>
+
+  <view class="login-form">
+    <view class="form-item">
+      <view class="form-icon">
+        <text class="icon-phone">📱</text>
+      </view>
+      <input 
+        class="form-input" 
+        type="number" 
+        placeholder="请输入手机号" 
+        value="{{phone}}" 
+        bindinput="onPhoneInput"
+        maxlength="11"
+      />
+    </view>
+
+    <view class="form-item">
+      <view class="form-icon">
+        <text class="icon-lock">🔒</text>
+      </view>
+      <input 
+        class="form-input" 
+        type="{{showPassword ? 'text' : 'password'}}" 
+        placeholder="请输入密码" 
+        value="{{password}}" 
+        bindinput="onPasswordInput"
+      />
+      <view class="password-toggle" bindtap="togglePassword">
+        <text>{{showPassword ? '🙈' : '👁️'}}</text>
+      </view>
+    </view>
+
+    <view class="form-options">
+      <view class="remember-me">
+        <checkbox color="#1A73E8" />
+        <text class="option-text">记住密码</text>
+      </view>
+      <view class="forgot-password" bindtap="goToForgetPassword">
+        <text class="option-text link">忘记密码？</text>
+      </view>
+    </view>
+
+    <view class="form-btn" bindtap="doLogin">
+      <text class="btn-text">登录</text>
+    </view>
+
+    <view class="register-link" bindtap="goToRegister">
+      <text class="link-text">还没有账号？</text>
+      <text class="link-text highlight">立即注册</text>
+    </view>
+  </view>
+</view>
