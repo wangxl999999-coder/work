@@ -111,12 +111,15 @@ Page({
   },
 
   onCityChange(e) {
-    const { value, index } = e.detail
-    const city = cities[index]
-    this.setData({
-      expectedCity: city.name,
-      expectedCityCode: city.code
-    })
+    const value = e.detail.value
+    const index = value[0]
+    if (index >= 0 && index < cities.length) {
+      const city = cities[index]
+      this.setData({
+        expectedCity: city.name,
+        expectedCityCode: city.code
+      })
+    }
   },
 
   openJobPicker() {
@@ -128,12 +131,16 @@ Page({
   },
 
   onJobChange(e) {
-    const { value, index } = e.detail
-    const job = jobTypes[index + 1]
-    this.setData({
-      expectedJob: job.name,
-      expectedJobId: job.id
-    })
+    const value = e.detail.value
+    const index = value[0]
+    const jobIndex = index + 1
+    if (jobIndex >= 0 && jobIndex < jobTypes.length) {
+      const job = jobTypes[jobIndex]
+      this.setData({
+        expectedJob: job.name,
+        expectedJobId: job.id
+      })
+    }
   },
 
   validateForm() {
