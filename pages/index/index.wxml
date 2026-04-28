@@ -1,0 +1,147 @@
+<view class="index-container">
+  <view class="search-section">
+    <view class="search-box">
+      <view class="search-icon">🔍</view>
+      <input 
+        class="search-input" 
+        type="text" 
+        placeholder="搜索岗位、公司名称" 
+        value="{{searchKeyword}}" 
+        bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+        confirm-type="search"
+      />
+      <view wx:if="{{searchKeyword}}" class="clear-icon" bindtap="onClearSearch">✕</view>
+    </view>
+    <view class="filter-btn" bindtap="openCityFilter">
+      <text class="filter-text">{{selectedCity || '地区'}}</text>
+      <text class="filter-arrow">▼</text>
+    </view>
+  </view>
+
+  <view class="sort-section">
+    <view 
+      class="sort-item {{sortType === 'comprehensive' ? 'active' : ''}}" 
+      bindtap="toggleSort" 
+      data-type="comprehensive"
+    >
+      <text>综合排序</text>
+    </view>
+    <view 
+      class="sort-item {{sortType === 'time' ? 'active' : ''}}" 
+      bindtap="toggleSort" 
+      data-type="time"
+    >
+      <text>时间排序</text>
+    </view>
+    <view 
+      class="sort-item {{sortType === 'distance' ? 'active' : ''}}" 
+      bindtap="toggleSort" 
+      data-type="distance"
+    >
+      <text>距离排序</text>
+    </view>
+  </view>
+
+  <scroll-view 
+    class="job-list" 
+    scroll-y 
+    enhanced 
+    show-scrollbar="{{false}}"
+    refresher-enabled="{{true}}"
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="onPullDownRefresh"
+    bindscrolltolower="onReachBottom"
+  >
+    <view class="job-list-container">
+      <view 
+        wx:for="{{filteredJobs}}" 
+        wx:key="id" 
+        class="job-card" 
+        bindtap="goToJobDetail" 
+        data-id="{{item.id}}"
+      >
+        <view class="job-header">
+          <view class="job-title-row">
+            <text class="job-title">{{item.title}}</text>
+            <view class="job-tags">
+              <text wx:if="{{item.isHot}}" class="tag hot">热门</text>
+              <text wx:if="{{item.isUrgent}}" class="tag urgent">急招</text>
+            </view>
+          </view>
+          <text class="job-salary">{{item.salary}}</text>
+        </view>
+        
+        <view class="job-info">
+          <view class="info-item">
+            <text class="info-label">公司：</text>
+            <text class="info-value ellipsis">{{item.company}}</text>
+          </view>
+          <view class="info-row">
+            <view class="info-item">
+              <text class="info-label">地区：</text>
+              <text class="info-value">{{item.city}}</text>
+            </view>
+            <view class="info-item" wx:if="{{item.distance}}">
+              <text class="info-value text-primary">距您{{item.distance}}</text>
+            </view>
+          </view>
+          <view class="info-item">
+            <text class="info-label">职位类型：</text>
+            <text class="info-value">{{item.jobType}}</text>
+          </view>
+        </view>
+        
+        <view class="job-footer">
+          <view class="time-info">
+            <text class="time-text">{{item.timeAgo}}</text>
+            <text class="view-text">| {{item.views}}人浏览</text>
+          </view>
+          <view class="favorite-btn" catchtap="toggleFavorite" data-id="{{item.id}}" data-index="{{index}}">
+            <text class="{{item.isFavorite ? 'favorite-icon active' : 'favorite-icon'}}">{{item.isFavorite ? '❤️' : '🤍'}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{filteredJobs.length === 0 && !loading}}" class="empty-state">
+        <text class="empty-icon">🔍</text>
+        <text class="empty-text">暂无相关职位</text>
+        <text class="empty-tip">试试其他搜索条件吧</text>
+      </view>
+
+      <view wx:if="{{loading}}" class="loading-state">
+        <text class="loading-text">加载中...</text>
+      </view>
+
+      <view wx:if="{{!hasMore && filteredJobs.length > 0}}" class="no-more-state">
+        <text class="no-more-text">已经到底啦~</text>
+      </view>
+    </view>
+  </scroll-view>
+</view>
+
+<view wx:if="{{cityFilterVisible}}" class="filter-mask" bindtap="closeCityFilter"></view>
+<view wx:if="{{cityFilterVisible}}" class="filter-popup">
+  <view class="filter-header">
+    <text class="filter-title">选择地区</text>
+    <view class="filter-close" bindtap="closeCityFilter">✕</view>
+  </view>
+  <scroll-view class="filter-content" scroll-y>
+    <view 
+      class="filter-item {{!selectedCity ? 'active' : ''}}" 
+      bindtap="clearCityFilter"
+    >
+      <text>全部地区</text>
+    </view>
+    <view 
+      wx:for="{{cities}}" 
+      wx:key="id" 
+      class="filter-item {{selectedCityCode === item.code ? 'active' : ''}}" 
+      bindtap="selectCity" 
+      data-city="{{item.name}}" 
+      data-code="{{item.code}}"
+    >
+      <text>{{item.name}}</text>
+    </view>
+  </scroll-view>
+</view>

@@ -1,0 +1,194 @@
+<view class="detail-container" wx:if="{{job}}">
+  <scroll-view class="detail-content" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="section job-section">
+      <view class="job-header">
+        <view class="job-title-row">
+          <text class="job-title">{{job.title}}</text>
+          <view class="job-tags">
+            <text wx:if="{{job.isHot}}" class="tag hot">热门</text>
+            <text wx:if="{{job.isUrgent}}" class="tag urgent">急招</text>
+          </view>
+        </view>
+        <text class="job-salary">{{job.salary}}</text>
+      </view>
+      
+      <view class="job-meta">
+        <view class="meta-item">
+          <text class="meta-icon">🏢</text>
+          <text class="meta-text">{{job.company}}</text>
+        </view>
+        <view class="meta-row">
+          <view class="meta-item">
+            <text class="meta-icon">📍</text>
+            <text class="meta-text">{{job.city}}</text>
+          </view>
+          <view class="meta-item" wx:if="{{job.distance}}">
+            <text class="meta-text text-primary">距您{{job.distance}}</text>
+          </view>
+        </view>
+        <view class="meta-item">
+          <text class="meta-icon">💼</text>
+          <text class="meta-text">{{job.jobType}}</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-icon">🕐</text>
+          <text class="meta-text">发布于{{job.timeAgo}}</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-icon">👁️</text>
+          <text class="meta-text">{{job.views}}人浏览</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-header">
+        <view class="section-title">
+          <view class="title-icon">📋</view>
+          <text class="title-text">职位详情</text>
+        </view>
+      </view>
+      <view class="section-content">
+        <text class="detail-text">{{job.detail}}</text>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-header">
+        <view class="section-title">
+          <view class="title-icon">📍</view>
+          <text class="title-text">工作地点</text>
+        </view>
+      </view>
+      <view class="location-card" bindtap="openMap">
+        <view class="map-preview">
+          <map 
+            class="mini-map" 
+            longitude="{{job.location.longitude}}" 
+            latitude="{{job.location.latitude}}" 
+            scale="14" 
+            markers="{{markers}}"
+            show-location
+          />
+          <view class="map-overlay">
+            <text class="map-text">点击查看地图导航</text>
+            <text class="map-arrow">›</text>
+          </view>
+        </view>
+        <view class="location-info">
+          <text class="location-address">{{job.address}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-header">
+        <view class="section-title">
+          <view class="title-icon">👤</view>
+          <text class="title-text">联系方式</text>
+        </view>
+      </view>
+      <view class="contact-card" bindtap="showContact">
+        <view class="contact-info">
+          <view class="contact-avatar">
+            <text class="avatar-text">招</text>
+          </view>
+          <view class="contact-detail">
+            <text class="contact-name">{{job.contact.name}}</text>
+            <text class="contact-role">招聘经理</text>
+          </view>
+        </view>
+        <view class="contact-btn">
+          <text class="contact-btn-text">立即联系</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+
+  <view class="bottom-bar">
+    <view class="action-item" bindtap="toggleFavorite">
+      <text class="action-icon {{isFavorite ? 'active' : ''}}">{{isFavorite ? '❤️' : '🤍'}}</text>
+      <text class="action-text">{{isFavorite ? '已收藏' : '收藏'}}</text>
+    </view>
+    <view class="action-item">
+      <button class="share-btn" open-type="share">
+        <text class="action-icon">📤</text>
+        <text class="action-text">分享</text>
+      </button>
+    </view>
+    <view class="contact-btn-bar" bindtap="showContact">
+      <text class="contact-bar-text">立即联系</text>
+    </view>
+  </view>
+</view>
+
+<view wx:if="{{showContactModal}}" class="modal-mask" bindtap="hideContactModal">
+  <view class="modal-content" catchtap="">
+    <view class="modal-header">
+      <text class="modal-title">联系方式</text>
+    </view>
+    <view class="modal-body">
+      <view class="contact-card-modal">
+        <view class="contact-avatar-modal">
+          <text class="avatar-text">{{job.contact.name[0]}}</text>
+        </view>
+        <view class="contact-detail-modal">
+          <text class="contact-name">{{job.contact.name}}</text>
+          <text class="contact-role">招聘经理</text>
+        </view>
+      </view>
+      <view class="phone-section">
+        <text class="phone-label">联系电话</text>
+        <view class="phone-row">
+          <text class="phone-number">{{job.contact.phone}}</text>
+          <view class="copy-btn" bindtap="copyPhone">
+            <text class="copy-text">复制</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="modal-footer">
+      <view class="modal-btn cancel" bindtap="hideContactModal">
+        <text class="modal-btn-text">取消</text>
+      </view>
+      <view class="modal-btn confirm" bindtap="makePhoneCall">
+        <text class="modal-btn-text">拨打电话</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view wx:if="{{showMapModal}}" class="modal-mask" bindtap="closeMapModal">
+  <view class="modal-full" catchtap="">
+    <view class="map-modal-header">
+      <text class="map-modal-title">工作地点</text>
+      <view class="map-modal-close" bindtap="closeMapModal">✕</view>
+    </view>
+    <view class="map-container">
+      <map 
+        class="full-map" 
+        longitude="{{job.location.longitude}}" 
+        latitude="{{job.location.latitude}}" 
+        scale="15" 
+        markers="{{markers}}"
+        show-location
+        show-compass
+      />
+    </view>
+    <view class="map-modal-footer">
+      <view class="location-info-full">
+        <text class="location-address-full">{{job.address}}</text>
+      </view>
+      <view class="navigation-btn" bindtap="getNavigation">
+        <text class="navigation-icon">🧭</text>
+        <text class="navigation-text">导航前往</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view wx:if="{{!job}}" class="loading-page">
+  <text class="loading-text">加载中...</text>
+</view>
